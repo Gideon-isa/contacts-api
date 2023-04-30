@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ltp.contacts.exception.NoContactException;
+import com.ltp.contacts.exception.ContactNotFoundException;
 import com.ltp.contacts.pojo.Contact;
 import com.ltp.contacts.service.ContactService;
 
@@ -32,7 +32,7 @@ public class ContactController {
         try {
             Contact contact = contactService.getContactById(id);
             return new ResponseEntity<Contact>(contact, HttpStatus.OK);
-        } catch (NoContactException e) {
+        } catch (ContactNotFoundException e) {
             // TODO: handle exception
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -45,14 +45,14 @@ public class ContactController {
     public ResponseEntity<HttpStatus> createContact(@Valid @RequestBody Contact contact) {
         contactService.saveContact(contact);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
+    } 
 
     @PutMapping("/contact/{id}")
     public ResponseEntity<Contact> updateContact(@PathVariable String id, @Valid @RequestBody Contact contact) {
         try {
             contactService.updateContact(id, contact);
             return new ResponseEntity<Contact>(contactService.getContactById(id), HttpStatus.OK);
-        }catch(NoContactException e) {
+        }catch(ContactNotFoundException e) {
             return new ResponseEntity<Contact>(HttpStatus.BAD_REQUEST);
         }
         
